@@ -2,7 +2,7 @@ INSTRUCTIONS
 
 Create a sample web app in React/Flutter using the specified API with the following checklist. Format and design is anything you want but make it presentable.
 
- 
+
 
 Time Limit:  7 days from now
 
