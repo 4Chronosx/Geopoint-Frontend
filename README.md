@@ -1,73 +1,118 @@
-# React + TypeScript + Vite
+# GeoPoint — IP Geolocation Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-featured IP geolocation web application built with React 19, TypeScript, and Vite. Users can log in, look up geolocation data for any IP address, view an interactive map pinpointing the location, and manage a searchable history of past lookups.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Authentication** — Secure login/logout backed by a REST API; session is persisted across page reloads via cookie-based auth.
+- **Protected & Guest routes** — Unauthenticated users are redirected to `/login`; authenticated users are redirected away from `/login` to `/home`.
+- **Auto IP detection** — On load the dashboard fetches and displays geolocation info for the current user's IP address.
+- **IP search** — Enter any IPv4 or IPv6 address to instantly retrieve city, region, country, organisation, timezone, and postal code.
+- **Client-side IP validation** — Invalid addresses are rejected immediately with a toast notification before any network request is made.
+- **Interactive map** — A Leaflet map pins the exact coordinates of the resolved IP address.
+- **Search history** — Every successful lookup is saved to the backend and displayed in a collapsible table.
+  - Click any history entry to re-display its geolocation info and re-center the map.
+  - Select multiple entries via checkboxes and bulk-delete them in one request.
+- **Clear search** — Resets the view back to the current user's own IP geolocation.
+- **Toast notifications** — Real-time feedback for loading states, success, and error events via Sonner.
+- **Space-themed dark UI** — Custom Tailwind CSS design with glassmorphism cards and glowing accents.
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Layer | Library / Tool |
+|---|---|
+| Framework | React 19 |
+| Language | TypeScript 5 |
+| Build tool | Vite 7 |
+| Styling | Tailwind CSS v4 |
+| UI primitives | Radix UI / shadcn/ui |
+| Table | TanStack Table v8 |
+| Map | Leaflet + React-Leaflet |
+| Routing | React Router v7 |
+| Notifications | Sonner |
+| Icons | Lucide React |
+| Linting | ESLint + TypeScript-ESLint |
+| Deployment | Vercel |
 
-## Expanding the ESLint configuration
+## Project Structure
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+├── App.tsx                  # Root router with protected/guest route guards
+├── main.tsx
+├── index.css
+├── components/
+│   ├── geo-info-card.tsx    # Displays IP, city, region, country, org, timezone
+│   ├── ip-map.tsx           # Leaflet map component
+│   ├── search-bar.tsx       # IP input with search & clear actions
+│   ├── ProtectedRoute.tsx
+│   ├── search/
+│   │   ├── columns.tsx      # TanStack Table column definitions
+│   │   ├── data-table.tsx   # Table with checkbox selection & bulk delete
+│   │   └── collapsible-table.tsx
+│   └── ui/                  # shadcn/ui primitives (badge, button, card, …)
+├── context/
+│   └── AuthContext.tsx      # Auth state, login/logout helpers
+├── lib/
+│   ├── api.ts               # Centralised fetch wrapper (VITE_API_URL)
+│   └── utils.ts
+├── pages/
+│   ├── home/HomePage.tsx    # Main dashboard
+│   └── login/LoginPage.tsx  # Login form
+└── services/
+    ├── auth.service.ts      # login · logout · currentUser
+    └── search.services.ts   # getAll · add · delete · searchGeo · getUserGeo
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Prerequisites
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node.js ≥ 18
+- A running backend API (see the companion API repository)
+
+### Installation
+
+```bash
+npm install
 ```
+
+### Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+VITE_API_URL=http://localhost:8000
+```
+
+> Set this to your deployed backend URL in production.
+
+### Development
+
+```bash
+npm run dev
+```
+
+### Build
+
+```bash
+npm run build
+```
+
+### Preview production build
+
+```bash
+npm run preview
+```
+
+## Deployment
+
+The project is configured for Vercel. The `vercel.json` rewrites all routes to `index.html` to support client-side routing:
+
+```json
+{
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
+```
+
+Set the `VITE_API_URL` environment variable in your Vercel project settings to point to your hosted backend.
