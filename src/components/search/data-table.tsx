@@ -2,14 +2,14 @@
 
 import * as React from "react"
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+// import {
+//   DropdownMenu,
+//   DropdownMenuCheckboxItem,
+//   DropdownMenuContent,
+//   DropdownMenuGroup,
+//   DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu"
+// import { Input } from "@/components/ui/input"
 import {
   Table,
   TableBody,
@@ -30,10 +30,7 @@ import {
   type SortingState,
   type VisibilityState,
 } from "@tanstack/react-table"
-import {ChevronDown} from "lucide-react"
-
-
-
+// import {ChevronDown} from "lucide-react"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -73,7 +70,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      {/* <div className="flex items-center pb-2">
         <Input
           placeholder="Filter emails..."
           value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
@@ -110,7 +107,7 @@ export function DataTable<TData, TValue>({
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
+      </div> */}
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>

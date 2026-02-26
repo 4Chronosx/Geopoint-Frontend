@@ -1,12 +1,27 @@
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Search } from "lucide-react"
+import React from "react"
 
+export function SearchBar({ onSearch }: { onSearch: (query: string) => void }) {
+  const [query, setQuery] = React.useState("")
 
-export default function SearchBar() {
-    return (
-        <>
-        <div className="min-h-10 w-full max-w-96 p-2 border rounded-2xl flex flex-row justify-around">
-            <input type="text" className="w-3/4 outline-none"/>
-            <button className="">Search</button>
-        </div>
-        </>
-    )
+  const handleSubmit = (e: React.SubmitEvent) => {
+    e.preventDefault()
+    onSearch(query)
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="flex w-full max-w-md mt-8 mb-4">
+      <Input
+        placeholder="Search..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        className="focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0"
+      />
+      <Button type="submit" className="rounded-l-none">
+        <Search className="h-4 w-4" />
+      </Button>
+    </form>
+  )
 }

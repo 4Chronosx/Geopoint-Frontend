@@ -15,15 +15,13 @@ import {
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 
 
-
-export type Payment = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
+export type IPsearch = {
+    id: string,
+    ipsearch: string,
+    datetime: string
 }
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<IPsearch>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -47,41 +45,26 @@ export const columns: ColumnDef<Payment>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "ipsearch",
+    header: "IP Address",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
+      <div className="capitalize">{row.getValue("ipsearch")}</div>
     ),
   },
   {
-    accessorKey: "email",
+    accessorKey: "datetime",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          Datetime
           <ArrowUpDown />
         </Button>
       )
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
-  },
-  {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
-
-      // Format the amount as a dollar amount.
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount)
-
-      return <div className="text-right font-medium">{formatted}</div>
-    },
+    cell: ({ row }) => <div className="lowercase">{row.getValue("datetime")}</div>,
   },
   {
     id: "actions",
@@ -103,12 +86,13 @@ export const columns: ColumnDef<Payment>[] = [
               <DropdownMenuItem
                 onClick={() => navigator.clipboard.writeText(payment.id)}
               >
-                Copy payment ID
+                Load data
               </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuGroup>
-              <DropdownMenuItem>View customer</DropdownMenuItem>
-              <DropdownMenuItem>View payment details</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(payment.id)}
+              >
+                Delete
+              </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>

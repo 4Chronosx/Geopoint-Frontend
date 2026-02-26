@@ -9,7 +9,6 @@ import { Separator } from "@/components/ui/separator"
 
 
 interface GeoInfoProps {
-
     ip: string,
     hostname: string,
     city: string,
@@ -20,7 +19,6 @@ interface GeoInfoProps {
     postal: string,
     timezone: string,
     readme: string
-
 }
 
 export function GeoInfoCard({ data }: { data: GeoInfoProps }) {
