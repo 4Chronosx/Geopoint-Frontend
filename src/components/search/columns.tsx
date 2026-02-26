@@ -8,12 +8,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-
-  type ColumnDef,
-} from "@tanstack/react-table"
+import { type ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
-
 
 export type IPsearch = {
     id: string,
@@ -21,7 +17,12 @@ export type IPsearch = {
     datetime: string
 }
 
-export const columns: ColumnDef<IPsearch>[] = [
+interface ColumnActions {
+  onDelete: (id: string) => void
+  onLoad: (id: string) => void
+}
+
+export const createColumns = ({ onDelete, onLoad }: ColumnActions): ColumnDef<IPsearch>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -48,30 +49,27 @@ export const columns: ColumnDef<IPsearch>[] = [
     accessorKey: "ipsearch",
     header: "IP Address",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("ipsearch")}</div>
+      <div>{row.getValue("ipsearch")}</div>
     ),
   },
   {
     accessorKey: "datetime",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Datetime
-          <ArrowUpDown />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("datetime")}</div>,
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Datetime
+        <ArrowUpDown />
+      </Button>
+    ),
+    cell: ({ row }) => <div>{row.getValue("datetime")}</div>,
   },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original
-
+      const item = row.original
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -83,13 +81,12 @@ export const columns: ColumnDef<IPsearch>[] = [
           <DropdownMenuContent align="end" className="w-40">
             <DropdownMenuGroup>
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(payment.id)}
-              >
+              <DropdownMenuItem onClick={() => onLoad(item.id)}>
                 Load data
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(payment.id)}
+                onClick={() => onDelete(item.id)}
+                className="text-red-500 focus:text-red-500"
               >
                 Delete
               </DropdownMenuItem>
