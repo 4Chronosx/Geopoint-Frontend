@@ -13,7 +13,7 @@ export async function apiClient(endpoint: string, options: RequestInit = {}) {
         if (window.location.pathname !== '/login') {
             window.location.href = '/login'
         }
-        return null 
+        return {}
     }
 
     if (!res.ok) {
@@ -27,7 +27,7 @@ export async function apiClient(endpoint: string, options: RequestInit = {}) {
     }
 
     // 204 No Content — don't parse body
-    if (res.status === 204) return null
+    if (res.status === 204) return {}
 
     return res.json()
 }

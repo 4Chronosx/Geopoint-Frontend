@@ -118,7 +118,11 @@ export default function HomePage() {
       const data = await SearchService.getInfo(id)
       const ip_info = data[0]
       if (ip_info) {
-        setGeoData(ip_info)
+        const normalised: GeoInfoProps = {
+          ...ip_info,
+          ip: ip
+        }
+        setGeoData(normalised)
         setSearchValue(ip)
         toast.success('Geolocation data loaded')
       } else {
@@ -198,7 +202,7 @@ export default function HomePage() {
             {geoData.loc && (() => {
               const [lat, lng] = geoData.loc.split(",").map(Number)
               return !isNaN(lat) && !isNaN(lng) ? (
-                <IPMap lat={lat} lng={lng} label={`${geoData.ip || searchValue || '—'} — ${geoData.city}, ${geoData.country}`} />
+                <IPMap lat={lat} lng={lng} label={`${searchValue} — ${geoData.city}, ${geoData.country}`} />
               ) : null
             })()}
             {/* Geo info card on the right */}
