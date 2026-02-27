@@ -36,8 +36,6 @@ export default function HomePage() {
   const [history, setHistory] = useState<IPsearch[]>([])
   const [historyLoading, setHistoryLoading] = useState(true)
   const [geoData, setGeoData] = useState<GeoInfoProps | null>(null)
-  const [userGeoData, setUserGeoData] = useState<GeoInfoProps | null>(null)
-  const [userIp, setUserIp] = useState<string>('')
   const [searchValue, setSearchValue] = useState<string>('')
   const [searching, setSearching] = useState(false)
 
@@ -45,8 +43,6 @@ export default function HomePage() {
     SearchService.getUserGeo()
       .then((data: GeoInfoProps) => {
         setGeoData(data)
-        setUserGeoData(data)
-        setUserIp(data.ip)
         setSearchValue(data.ip)
       })
       .catch(() => toast.error('Failed to detect your IP address'))
@@ -151,8 +147,6 @@ export default function HomePage() {
     try {
       const data: GeoInfoProps = await SearchService.getUserGeo()
       setGeoData(data)
-      setUserGeoData(data)
-      setUserIp(data.ip)
       setSearchValue(data.ip)
       toast.success('Restored your location', { id: clearToast })
     } catch {
