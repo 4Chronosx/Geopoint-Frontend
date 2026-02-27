@@ -37,7 +37,6 @@ export default function HomePage() {
   const [historyLoading, setHistoryLoading] = useState(true)
   const [geoData, setGeoData] = useState<GeoInfoProps | null>(null)
   const [searchValue, setSearchValue] = useState<string>('')
-  const [searching, setSearching] = useState(false)
 
   useEffect(() => {
     SearchService.getUserGeo()
@@ -72,8 +71,6 @@ export default function HomePage() {
       return
     }
 
-    setSearching(true)
-
     const searchToast = toast.loading(`Looking up ${ip}...`)
 
     try {
@@ -91,8 +88,6 @@ export default function HomePage() {
       toast.success(`Found geolocation for ${ip}`, { id: searchToast })
     } catch (err: any) {
       toast.error('Search failed — please try again', { id: searchToast })
-    } finally {
-      setSearching(false)
     }
   }
 
