@@ -87,6 +87,16 @@ VITE_API_URL=http://localhost:8000
 
 > Set this to your deployed backend URL in production.
 
+### Seeded Account
+
+The production backend is pre-populated with a user you can use for testing or demoing the application:
+
+- **Email:** `user@example.com`
+- **Password:** `password123`
+- **Username:** `user123`
+
+Simply log in with these credentials at the `/login` page of the deployed app.
+
 ### Development
 
 ```bash
