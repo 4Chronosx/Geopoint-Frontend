@@ -1,5 +1,8 @@
 {
   "rewrites": [
+    { "source": "/api/:path*", "destination": "@backend_url/api/:path*" },
+    { "source": "/home/:path*", "destination": "@backend_url/home/:path*" },
+    { "source": "/search/:path*", "destination": "@backend_url/search/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
