@@ -13,7 +13,7 @@ import { History, ChevronsUpDown } from "lucide-react"
 interface CollapsibleTableProps<TData extends { id: string }, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
-    onDeleteSelected?: (ids: string[]) => void  // ← pass through to DataTable
+    onDeleteSelected?: (ids: string[]) => void  
 }
 
 export function CollapsibleTable<TData extends { id: string }, TValue>({
@@ -60,7 +60,7 @@ export function CollapsibleTable<TData extends { id: string }, TValue>({
           <DataTable
             columns={columns}
             data={data} 
-            onDeleteSelected={onDeleteSelected}  // ← pass through
+            onDeleteSelected={onDeleteSelected}  
           />
         </div>
       </CollapsibleContent>

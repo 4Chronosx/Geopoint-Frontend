@@ -13,7 +13,7 @@ export async function apiClient(endpoint: string, options: RequestInit = {}) {
         if (window.location.pathname !== '/login') {
             window.location.href = '/login'
         }
-        return null // ← just return null instead of redirecting
+        return null 
     }
 
     if (!res.ok) {

@@ -67,7 +67,6 @@ export default function HomePage() {
   const handleSearch = async (ip: string) => {
     if (!ip) return
 
-    // IP validation
     if (!isValidIP(ip)) {
       toast.error('Invalid IP address format')
       return
@@ -122,17 +121,10 @@ export default function HomePage() {
   const handleLoad = useCallback(async (id: string, ip: string) => {
     try {
       const data = await SearchService.getInfo(id)
-      // API may return an array or a single object
-      const raw = Array.isArray(data) ? data[0] : data
-      if (raw) {
-        // Normalise: the backend may store ip as ip_address or omit it entirely;
-        // fall back to the ip we already know from the history row.
-        const normalised: GeoInfoProps = {
-          ...raw,
-          ip: raw.ip || raw.ip_address || ip,
-        }
-        setGeoData(normalised)
-        setSearchValue(normalised.ip)
+      const ip_info = data[0]
+      if (ip_info) {
+        setGeoData(ip_info)
+        setSearchValue(ip)
         toast.success('Geolocation data loaded')
       } else {
         toast.error('No data found for this entry')
@@ -154,7 +146,6 @@ export default function HomePage() {
     }
   }, [])
 
-  // memoize columns so they don't re-create on every render
   const columns = useMemo(() => createColumns({
     onDelete: handleDeleteOne,
     onLoad: handleLoad,
@@ -201,9 +192,6 @@ export default function HomePage() {
         </p>
         <div className="w-full max-w-xl mt-2">
           <SearchBar onSearch={handleSearch} defaultValue={searchValue} onClear={handleClear} />
-          {searching && (
-            <p className="text-xs text-cyan-400/70 mt-2 animate-pulse">Locating IP…</p>
-          )}
         </div>
       </section>
 

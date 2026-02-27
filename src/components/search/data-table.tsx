@@ -41,7 +41,7 @@ export function DataTable<TData extends { id: string }, TValue>({
     onRowSelectionChange: setRowSelection,
     initialState: {
         pagination: {
-            pageSize: 5, // ← max 5 rows per page
+            pageSize: 5, 
         },
     },
     state: { sorting, columnFilters, columnVisibility, rowSelection },
@@ -52,7 +52,7 @@ export function DataTable<TData extends { id: string }, TValue>({
       .getFilteredSelectedRowModel()
       .rows.map(row => row.original.id)
     onDeleteSelected?.(selectedIds)
-    setRowSelection({}) // clear selection after delete
+    setRowSelection({})
   }
 
   const selectedCount = table.getFilteredSelectedRowModel().rows.length
