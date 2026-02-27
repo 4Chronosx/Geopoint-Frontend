@@ -36,14 +36,18 @@ export default function HomePage() {
   const [history, setHistory] = useState<IPsearch[]>([])
   const [historyLoading, setHistoryLoading] = useState(true)
   const [geoData, setGeoData] = useState<GeoInfoProps | null>(null)
+  const [userGeoData, setUserGeoData] = useState<GeoInfoProps | null>(null)
   const [userIp, setUserIp] = useState<string>('')
+  const [searchValue, setSearchValue] = useState<string>('')
   const [searching, setSearching] = useState(false)
 
   useEffect(() => {
     SearchService.getUserGeo()
       .then((data: GeoInfoProps) => {
         setGeoData(data)
+        setUserGeoData(data)
         setUserIp(data.ip)
+        setSearchValue(data.ip)
       })
       .catch(() => toast.error('Failed to detect your IP address'))
 
@@ -119,19 +123,40 @@ export default function HomePage() {
     }
   }, [])
 
-  const handleLoad = useCallback(async (id: string) => {
+  const handleLoad = useCallback(async (id: string, ip: string) => {
     try {
       const data = await SearchService.getInfo(id)
       // API may return an array or a single object
-      const entry = Array.isArray(data) ? data[0] : data
-      if (entry) {
-        setGeoData(entry)
+      const raw = Array.isArray(data) ? data[0] : data
+      if (raw) {
+        // Normalise: the backend may store ip as ip_address or omit it entirely;
+        // fall back to the ip we already know from the history row.
+        const normalised: GeoInfoProps = {
+          ...raw,
+          ip: raw.ip || raw.ip_address || ip,
+        }
+        setGeoData(normalised)
+        setSearchValue(normalised.ip)
         toast.success('Geolocation data loaded')
       } else {
         toast.error('No data found for this entry')
       }
     } catch {
       toast.error('Failed to load entry')
+    }
+  }, [])
+
+  const handleClear = useCallback(async () => {
+    const clearToast = toast.loading('Restoring your location…')
+    try {
+      const data: GeoInfoProps = await SearchService.getUserGeo()
+      setGeoData(data)
+      setUserGeoData(data)
+      setUserIp(data.ip)
+      setSearchValue(data.ip)
+      toast.success('Restored your location', { id: clearToast })
+    } catch {
+      toast.error('Failed to restore your location', { id: clearToast })
     }
   }, [])
 
@@ -181,7 +206,7 @@ export default function HomePage() {
           Enter an IP address below to pinpoint its geographic location, ISP, and network details.
         </p>
         <div className="w-full max-w-xl mt-2">
-          <SearchBar onSearch={handleSearch} defaultValue={userIp} />
+          <SearchBar onSearch={handleSearch} defaultValue={searchValue} onClear={handleClear} />
           {searching && (
             <p className="text-xs text-cyan-400/70 mt-2 animate-pulse">Locating IP…</p>
           )}
@@ -196,7 +221,7 @@ export default function HomePage() {
             {geoData.loc && (() => {
               const [lat, lng] = geoData.loc.split(",").map(Number)
               return !isNaN(lat) && !isNaN(lng) ? (
-                <IPMap lat={lat} lng={lng} label={`${geoData.ip} — ${geoData.city}, ${geoData.country}`} />
+                <IPMap lat={lat} lng={lng} label={`${geoData.ip || searchValue || '—'} — ${geoData.city}, ${geoData.country}`} />
               ) : null
             })()}
             {/* Geo info card on the right */}

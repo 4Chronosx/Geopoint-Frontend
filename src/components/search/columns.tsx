@@ -19,7 +19,7 @@ export type IPsearch = {
 
 interface ColumnActions {
   onDelete: (id: string) => void
-  onLoad: (id: string) => void
+  onLoad: (id: string, ip: string) => void
 }
 
 export const createColumns = ({ onDelete, onLoad }: ColumnActions): ColumnDef<IPsearch>[] => [
@@ -81,7 +81,7 @@ export const createColumns = ({ onDelete, onLoad }: ColumnActions): ColumnDef<IP
           <DropdownMenuContent align="end" className="w-40">
             <DropdownMenuGroup>
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => onLoad(item.id)}>
+              <DropdownMenuItem onClick={() => onLoad(item.id, item.ipsearch)}>
                 Load data
               </DropdownMenuItem>
               <DropdownMenuItem
