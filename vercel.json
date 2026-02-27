@@ -1,8 +1,5 @@
 {
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://geopoint-backend.vercel.app/:path*" },
-    { "source": "/home/:path*", "destination": "https://geopoint-backend.vercel.app/:path*" },
-    { "source": "/search/:path*", "destination": "https://geopoint-backend.vercel.app/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
